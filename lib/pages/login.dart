@@ -53,21 +53,44 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 // Icon at the top
                 Image.asset(
-                  'assets/icons/agro_icon.png', // Path to your asset
-                  height: 100, // Adjust height as needed
-                  width: 100, // Adjust width as needed
+                  'assets/icons/bio.jpeg', // Path to your asset
+                  height: 150, // Adjust height as needed
+                  width: 150, // Adjust width as needed
                 ),
                 
                 
 
                 // Text below the icon
-                const Text(
-                  "Agroschoolbus",
-                  style: TextStyle(
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                // const Text(
+                //   "Agroschoolbus",
+                //   style: TextStyle(
+                //     fontSize: 28.0,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                //   textAlign: TextAlign.center,
+                // ),
+                const SizedBox(height: 20.0),
+                RichText(
                   textAlign: TextAlign.center,
+                  text: const TextSpan(
+                    text: 'Agro',
+                    style: TextStyle(color: Colors.black, fontSize: 28, fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(
+                        text: 'school',
+                        style: TextStyle(color: Color.fromARGB(255,154,196,58), fontSize: 28, fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: 'bus',
+                        style: TextStyle(color: Color.fromARGB(255, 0, 0, 0), fontSize: 28, fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(
+                        text: '.BIO',
+                        style: TextStyle(color: Color.fromARGB(255,154,196,58), fontSize: 28, fontWeight: FontWeight.bold),
+                      ),
+                      
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 40.0),
                 const Text(
@@ -113,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    backgroundColor: const Color.fromARGB(255, 110, 154, 56),
+                    backgroundColor: const Color.fromARGB(255, 154, 196, 58),
                     foregroundColor: const Color.fromARGB(255, 77, 77, 77),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4.0),
