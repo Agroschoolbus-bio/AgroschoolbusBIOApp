@@ -15,6 +15,7 @@ class MarkerController {
     List<LatLng> selectedPoints = [];
     List<Marker> customMarkers = [];
     List<Marker> shrederMarkers = [];
+    Map<int, ShrederData> shredersDataList = {};
     Map<LatLng, MarkerData> markersDataList = {};
     List<MarkerToCollectData> pendingMarkers = [];
     API api;
@@ -62,9 +63,16 @@ class MarkerController {
     void fetchShrederLocations() async {
       await api.fetchShrederPoints().then((markers) {
         shrederMarkers = markers.map((item) {
-          // final int id = item['id'];
+          final int id = item['id'];
+          
           final latitude = double.parse(item['latitude']);
           final longitude = double.parse(item['longitude']);
+
+          final String desc = item['description'];
+
+          LatLng latLng = LatLng(latitude, longitude);
+          ShrederData markerData = ShrederData(id: id, point: latLng, description: desc, closeMarkers: 0);
+          shredersDataList[id] = markerData;
 
           return buildShrederPin(LatLng(latitude, longitude));
         }).toList();
@@ -84,6 +92,38 @@ class MarkerController {
 
       double distance = sqrt(latDistance * latDistance + lonDistance * lonDistance);
       return distance;
+    }
+
+    int findClosestShrederPoint() {
+      double min, temp;
+      int min_idx;
+      shredersDataList.forEach((key, value) {
+        value.closeMarkers = 0;
+      });
+      
+      for (int i=0; i < selectedPoints.length; i++) {
+        min = calculateDistance(shredersDataList[1]!.point, selectedPoints[i]);
+        min_idx = 1;
+        shredersDataList.forEach((key, value) {
+          temp = calculateDistance(value.point, selectedPoints[i]);
+          if (temp < min) {
+            min = temp;
+            min_idx = key;
+          } 
+        });
+        shredersDataList[min_idx]!.closeMarkers += 1;
+      }
+      int max_counter = 0;
+      int max_id = 1;
+      shredersDataList.forEach((key, value) {
+        if (value.closeMarkers > max_counter) {
+          max_counter = value.closeMarkers;
+          max_id = key;
+        }
+      });
+
+      return max_id;
+
     }
 
 
@@ -140,6 +180,12 @@ class MarkerController {
           }
         }
       }
+
+      int shrederId = findClosestShrederPoint();
+      print(shrederId);
+      selectedPoints.add(shredersDataList[shrederId]!.point);
+
+      print(selectedPoints);
 
       onMarkersUpdated();
     }
