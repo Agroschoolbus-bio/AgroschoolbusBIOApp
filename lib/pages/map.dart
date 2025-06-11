@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MapPage> {
   void getTruckCapacity() {
     dynamic obj = {
       "title": "Χωρητικότητα φορτηγού",
-      "message": "Παρακαλώ, εισάγετε τη χωρητικότητα του φορτηγού σε μονάδες. Ένας κάδος αντιστοιχεί σε 1 μονάδα ενώ ένας σάκος σε 2.",
+      "message": "Παρακαλώ, εισάγετε τη χωρητικότητα του φορτηγού σε δεμάτια.",
       "capacityLabel": "Θετικός, ακέραιος αριθμός",
       "cancelText": "Ακύρωση",
       "onConfirm": (capacity) {
@@ -728,7 +728,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "yesterday",
-              tooltip: 'Όλα τα δοχεία',
+              tooltip: 'Όλα τα δεμάτια',
               child: Icon(
                 Icons.calendar_month,
                 color: filterPins == 1 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -743,7 +743,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today",
-              tooltip: 'Σημερινά δοχεία',
+              tooltip: 'Σημερινά δεμάτια',
               child: Icon(
                 Icons.today,
                 color: filterPins == 2 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -758,7 +758,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today1",
-              tooltip: 'Μη συλλεχθέντα, σημερινά δοχεία',
+              tooltip: 'Μη συλλεχθέντα, σημερινά δεμάτια',
               child: Icon(
                 Icons.calendar_view_week,
                 color: filterPins == 3 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),

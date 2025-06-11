@@ -137,7 +137,7 @@ class MarkerController {
         p = customMarkers[i].point;
         if (markersDataList[p]!.state == MarkerState.pending) {
           lupt[p] = i;
-          int weight = markersDataList[p]!.bags * 2 + markersDataList[p]!.buckets;
+          int weight = markersDataList[p]!.buckets;
           pendingMarkers.add(MarkerToCollectData(
             point: p, 
             distance: calculateDistance(p, factoryLocation), 
@@ -310,7 +310,7 @@ class MarkerController {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     Text(
-                      "Παραγωγός: ${markerData.userId}\nΚάδοι: ${markerData.buckets},\n Σακιά: ${markerData.bags}",
+                      "Παραγωγός: ${markerData.userId}\n Δεμάτια: ${markerData.buckets}",
                       style: TextStyle(
                           fontSize: 7,
                           color: Colors.black,
