@@ -14,6 +14,7 @@ class MarkerController {
     BuildContext context;
     List<LatLng> selectedPoints = [];
     List<Marker> customMarkers = [];
+    List<Marker> shrederMarkers = [];
     Map<LatLng, MarkerData> markersDataList = {};
     List<MarkerToCollectData> pendingMarkers = [];
     API api;
@@ -53,6 +54,20 @@ class MarkerController {
 
             return buildPin(markerData);
           }).toList();
+      });
+      onMarkersUpdated();
+    }
+
+
+    void fetchShrederLocations() async {
+      await api.fetchShrederPoints().then((markers) {
+        shrederMarkers = markers.map((item) {
+          // final int id = item['id'];
+          final latitude = double.parse(item['latitude']);
+          final longitude = double.parse(item['longitude']);
+
+          return buildShrederPin(LatLng(latitude, longitude));
+        }).toList();
       });
       onMarkersUpdated();
     }
@@ -266,6 +281,28 @@ class MarkerController {
                 ],
                 ),
             ),
+        );
+    }
+
+    Marker buildShrederPin(LatLng p) {
+    
+        return Marker(
+            point: p,
+            width: 60,
+            height: 60,
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Transform.rotate(
+                    angle: 0.8, 
+                    child: const Icon(
+                      Icons.push_pin_outlined,
+                      size: 30,
+                      color: Color.fromARGB(255, 253, 253, 253),
+                    ),
+                  )
+                ],
+                ),
         );
     }
 

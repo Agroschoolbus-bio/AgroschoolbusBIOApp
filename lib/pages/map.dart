@@ -106,6 +106,7 @@ class _MyHomePageState extends State<MapPage> {
       setState(() {});
     }, api: _api, context: context);
     markerController.fetchMarkers();
+    markerController.fetchShrederLocations();
     _startLocationTimer();
     
   }
@@ -628,8 +629,9 @@ class _MyHomePageState extends State<MapPage> {
                 ),
                 MarkerLayer(
                   markers: [
-                    ...getFactoryMarker(),
+                    // ...getFactoryMarker(),
                     ...markerController.customMarkers,
+                    ...markerController.shrederMarkers,
                     ...getCarMarker(),
                   ]
                 ),
