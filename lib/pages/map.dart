@@ -42,6 +42,9 @@ class _MyHomePageState extends State<MapPage> {
   Timer? _transporterPositionRefreshTimer;
 
 
+  Color bioGreen = Color.fromARGB(255, 154, 196, 58);
+
+
   
   // Timer? _timer;
   late API _api;
@@ -278,7 +281,7 @@ class _MyHomePageState extends State<MapPage> {
                   mapController.camera.zoom + 1,
                 );
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "zoomIn",
               tooltip: 'Μεγέθυνση',
@@ -293,7 +296,7 @@ class _MyHomePageState extends State<MapPage> {
                   mapController.camera.zoom - 1,
                 );
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "zoomOut",
               tooltip: 'Σμίκρυνση',
@@ -308,7 +311,7 @@ class _MyHomePageState extends State<MapPage> {
                   12.0,
                 );
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "centerMap",
               tooltip: 'Εστίαση',
@@ -330,7 +333,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _setShowOption(1);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "yesterday",
               tooltip: 'Όλα τα δοχεία',
@@ -345,7 +348,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _setShowOption(2);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today",
               tooltip: 'Σημερινά δοχεία',
@@ -360,7 +363,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _setShowOption(3);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today1",
               tooltip: 'Μη συλλεχθέντα, σημερινά δοχεία',
@@ -382,7 +385,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
               
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "directions",
               tooltip: 'Δημιουργία διαδρομής',
@@ -398,7 +401,7 @@ class _MyHomePageState extends State<MapPage> {
                 // _fetchDirections();
                 // _togglePositionSubscription();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "navigation",
               tooltip: 'Πλοήγηση',
@@ -413,7 +416,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _changeTiles();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "terrain",
               tooltip: 'Αλλαγή χάρτη',
@@ -433,7 +436,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _toggleButtons();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "menu",
               tooltip: 'Επιλογές',
@@ -456,7 +459,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "start",
               tooltip: 'Εκκίνηση',
@@ -482,7 +485,7 @@ class _MyHomePageState extends State<MapPage> {
                 
                 // _enableOrDisableRoute(0);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "stop",
               tooltip: 'Ακύρωση',
