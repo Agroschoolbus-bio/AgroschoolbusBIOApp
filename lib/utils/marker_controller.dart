@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'package:agroschoolbus/utils/enum_types.dart';
 import './marker_data.dart';
 import '../services/api.dart';
+import '../services/gps.dart';
 
 import 'dart:math';
 
@@ -127,10 +129,15 @@ class MarkerController {
     }
 
 
-    void chooseMarkersToCollect() {
+    void chooseMarkersToCollect() async {
+      Position? instantPosition;
+      instantPosition = await determinePosition();
+
       selectedPoints = [];
       pendingMarkers = [];
-      selectedPoints.add(factoryLocation); // factory coordinates
+      selectedPoints.add(LatLng(instantPosition.latitude, instantPosition.longitude));
+      // selectedPoints.add(factoryLocation);
+      print(selectedPoints);
       LatLng p;
       Map<LatLng, int> lupt = {};
       for (int i = 0; i < customMarkers.length; i++) {

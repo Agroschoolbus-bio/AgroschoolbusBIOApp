@@ -83,7 +83,12 @@ class OsrmApi {
     String url = osrm + points;
 
     try {
-      final uri = Uri.parse(url);
+      final uri = Uri.parse(url).replace(
+        queryParameters: {
+          'overview': "full",
+          'geometries': "polyline"
+        },
+      );
       final response = await http.get(uri);
 
       

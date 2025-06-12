@@ -36,6 +36,7 @@ class _MyHomePageState extends State<MapPage> {
   Stream<Position>? _positionStream;
   StreamSubscription<Position>? _positionSubscription;
   Position? _currentPosition;
+  
   late LatLng cur = LatLng(37.4835, 21.6479);
 
   late UiController ui_ctrl;
@@ -108,7 +109,6 @@ class _MyHomePageState extends State<MapPage> {
     markerController.fetchMarkers();
     markerController.fetchShrederLocations();
     _startLocationTimer();
-    
   }
 
   bool _dialogShown = false;
@@ -831,7 +831,7 @@ class _MyHomePageState extends State<MapPage> {
             ),
             const SizedBox(height: 10.0),
             FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 // Center map action
                 markerController.chooseMarkersToCollect();
                 _fetchRoute();
