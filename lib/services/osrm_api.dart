@@ -128,6 +128,8 @@ class OsrmApi {
         final Map<String, dynamic> data = json.decode(response.body);
         final encodedPolyline = data['data'];
         routeStatus = data['name'];
+        transporterLatitude = double.parse(data['latitude']);
+        transporterLongitude = double.parse(data['longitude']);
         return decodePolyline(encodedPolyline);
       }
       
