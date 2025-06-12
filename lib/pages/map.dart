@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MapPage> {
   void getTruckCapacity() {
     dynamic obj = {
       "title": "Χωρητικότητα φορτηγού",
-      "message": "Παρακαλώ, εισάγετε τη χωρητικότητα του φορτηγού σε δεμάτια.",
+      "message": "Παρακαλώ, εισάγετε τη χωρητικότητα του φορτηγού σε τεμάχια.",
       "capacityLabel": "Θετικός, ακέραιος αριθμός",
       "cancelText": "Ακύρωση",
       "onConfirm": (capacity) {
@@ -138,6 +138,21 @@ class _MyHomePageState extends State<MapPage> {
       "ConfirmText": "Συνέχεια"
     };
     ui_ctrl.showInputDialog(obj);
+    
+  }
+
+
+  void getRoutingAlgorithm() {
+    dynamic obj = {
+      
+      "onConfirm": (selected) {
+        // markerController.truckCapacity = int.parse(capacity);   
+        markerController.pointSelectionAlgorithm = int.parse(selected);
+        // print(markerController.pointSelectionAlgorithm);
+      },
+      "ConfirmText": "Συνέχεια"
+    };
+    ui_ctrl.showOptionDialog(obj);
     
   }
 
@@ -728,7 +743,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "yesterday",
-              tooltip: 'Όλα τα δεμάτια',
+              tooltip: 'Όλα τα τεμάχια',
               child: Icon(
                 Icons.calendar_month,
                 color: filterPins == 1 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -743,7 +758,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today",
-              tooltip: 'Σημερινά δεμάτια',
+              tooltip: 'Σημερινά τεμάχια',
               child: Icon(
                 Icons.today,
                 color: filterPins == 2 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -758,7 +773,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today1",
-              tooltip: 'Μη συλλεχθέντα, σημερινά δεμάτια',
+              tooltip: 'Μη συλλεχθέντα, σημερινά τεμάχια',
               child: Icon(
                 Icons.calendar_view_week,
                 color: filterPins == 3 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -811,6 +826,21 @@ class _MyHomePageState extends State<MapPage> {
               tooltip: 'Αυτόματη επιλογή σημείων',
               child: const Icon(
                 Icons.display_settings_outlined,
+                color: Color.fromARGB(255, 255, 255, 255),
+                ),
+            ),
+            const SizedBox(height: 10.0),
+            FloatingActionButton(
+              onPressed: () {
+                // Center map action
+                getRoutingAlgorithm();
+              },
+              backgroundColor: bioGreen,
+              foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+              heroTag: "points",
+              tooltip: 'Αυτόματη επιλογή σημείων',
+              child: const Icon(
+                Icons.tips_and_updates,
                 color: Color.fromARGB(255, 255, 255, 255),
                 ),
             ),

@@ -102,4 +102,68 @@ class UiController {
     );
   }
 
+
+
+  void showOptionDialog(Map<String, dynamic> obj) {
+    String selectedOption = 'Option 1';
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Αλγόριθμος επιλογής σημείων"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RadioListTile<String>(
+                    title: Text('Αλγόριθμος 1 - Εγγύτητα πλειοψηφίας σημείων σε κάποιο σημείο συλλογής'),
+                    value: '1',
+                    groupValue: selectedOption,
+                    onChanged: (value) {
+                      setState(() => selectedOption = value!);
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: Text('Αλγόριθμος 2 - Εγγύτητα μεταφορέα σε κάποιο σημείο συλλογής'),
+                    value: '2',
+                    groupValue: selectedOption,
+                    onChanged: (value) {
+                      setState(() => selectedOption = value!);
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: Text('Αλγόριθμος 3'),
+                    value: '3',
+                    groupValue: selectedOption,
+                    onChanged: (value) {
+                      setState(() => selectedOption = value!);
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (obj["onConfirm"] is Function) {
+                      obj["onConfirm"](selectedOption);
+                    }
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+
 }

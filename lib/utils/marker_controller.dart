@@ -27,6 +27,7 @@ class MarkerController {
     LatLng factoryLocation = LatLng(37.423586, 21.667088);
 
     final VoidCallback onMarkersUpdated;
+    int pointSelectionAlgorithm = 1;
 
     MarkerController({
       required this.onMarkersUpdated, 
@@ -128,8 +129,20 @@ class MarkerController {
 
     }
 
+    void chooseMarkersToCollect() {
+      if (pointSelectionAlgorithm == 1) {
+        pointSelectionAlgorithm_1();
+      }
+      else if (pointSelectionAlgorithm == 1) {
+        pointSelectionAlgorithm_2();
+      } else {
+        pointSelectionAlgorithm_1();
+      }
 
-    void chooseMarkersToCollect() async {
+    }
+
+
+    void pointSelectionAlgorithm_1() async {
       Position? instantPosition;
       instantPosition = await determinePosition();
 
@@ -137,7 +150,7 @@ class MarkerController {
       pendingMarkers = [];
       selectedPoints.add(LatLng(instantPosition.latitude, instantPosition.longitude));
       // selectedPoints.add(factoryLocation);
-      print(selectedPoints);
+      // print(selectedPoints);
       LatLng p;
       Map<LatLng, int> lupt = {};
       for (int i = 0; i < customMarkers.length; i++) {
@@ -147,7 +160,7 @@ class MarkerController {
           int weight = markersDataList[p]!.buckets;
           pendingMarkers.add(MarkerToCollectData(
             point: p, 
-            distance: calculateDistance(p, factoryLocation), 
+            distance: calculateDistance(p, LatLng(instantPosition.latitude, instantPosition.longitude)), 
             ownerId: markersDataList[p]!.userId, 
             weight: weight));
         }
@@ -189,13 +202,99 @@ class MarkerController {
       }
 
       int shrederId = findClosestShrederPoint();
-      print(shrederId);
+      // print(shrederId);
       selectedPoints.add(shredersDataList[shrederId]!.point);
 
-      print(selectedPoints);
+      // print(selectedPoints);
 
       onMarkersUpdated();
     }
+
+
+    LatLng findclosestShrederToTransporter(transporterLocation) {
+      double dis;
+      double min_ = calculateDistance(shredersDataList[1]!.point, transporterLocation);
+      LatLng minPoint = shredersDataList[1]!.point;
+      shredersDataList.forEach((key, value) {
+        value.closeMarkers = 0;
+        dis = calculateDistance(value.point, transporterLocation);
+        if (dis < min_) {
+          min_ = dis;
+          minPoint = value.point;
+        }
+      });
+      return minPoint;
+    }
+
+    void pointSelectionAlgorithm_2() async {
+      Position? instantPosition;
+      instantPosition = await determinePosition();
+
+      selectedPoints = [];
+      pendingMarkers = [];
+      selectedPoints.add(LatLng(instantPosition.latitude, instantPosition.longitude));
+      LatLng _closestToTransporterShreder = findclosestShrederToTransporter(instantPosition);
+      // selectedPoints.add(factoryLocation);
+      // print(selectedPoints);
+      LatLng p;
+      Map<LatLng, int> lupt = {};
+      for (int i = 0; i < customMarkers.length; i++) {
+        p = customMarkers[i].point;
+        if (markersDataList[p]!.state == MarkerState.pending) {
+          lupt[p] = i;
+          int weight = markersDataList[p]!.buckets;
+          pendingMarkers.add(MarkerToCollectData(
+            point: p, 
+            distance: calculateDistance(p, _closestToTransporterShreder), 
+            ownerId: markersDataList[p]!.userId, 
+            weight: weight));
+        }
+      }
+
+      Map<int, int> ownerCounts = {};
+
+      for (var item in pendingMarkers) {
+        ownerCounts[item.ownerId] = (ownerCounts[item.ownerId] ?? 0) + 1;
+      }
+
+      pendingMarkers.sort((a, b) {
+        int dComparison = a.distance.compareTo(b.distance);
+        if (dComparison != 0) {
+          return dComparison;
+        }
+        int ownerFreqA = ownerCounts[a.ownerId] ?? 0;
+        int ownerFreqB = ownerCounts[b.ownerId] ?? 0;
+
+        return ownerFreqA.compareTo(ownerFreqB);
+      });
+
+      int totalWeight = 0;
+      for (var item in pendingMarkers) {
+        if (totalWeight + item.weight <= truckCapacity) {
+          selectedPoints.add(item.point);
+          updateMarkerDetailsOnServer(markersDataList[item.point]!.id, "selected");
+          markersDataList[item.point]!.state = MarkerState.selected;
+          markersDataList[item.point]!.markerColor = const Color.fromARGB(255, 21, 13, 253);
+          totalWeight += item.weight;
+
+          customMarkers[lupt[item.point]!] = buildPin(markersDataList[item.point]!);
+
+          ownerCounts[item.ownerId] = (ownerCounts[item.ownerId] ?? 1) - 1;
+          if (ownerCounts[item.ownerId] == 0) {
+            ownerCounts.remove(item.ownerId);
+          }
+        }
+      }
+
+      // int shrederId = findClosestShrederPoint();
+      // print(shrederId);
+      selectedPoints.add(_closestToTransporterShreder);
+
+      // print(selectedPoints);
+
+      onMarkersUpdated();
+    }
+
 
 
     void tapOnMarker(LatLng point) {
@@ -317,7 +416,7 @@ class MarkerController {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     Text(
-                      "Παραγωγός: ${markerData.userId}\n Δεμάτια: ${markerData.buckets}",
+                      "Παραγωγός: ${markerData.userId}\n Τεμάχια: ${markerData.buckets}",
                       style: TextStyle(
                           fontSize: 7,
                           color: Colors.black,
@@ -351,7 +450,7 @@ class MarkerController {
                     child: const Icon(
                       Icons.push_pin_outlined,
                       size: 30,
-                      color: Color.fromARGB(255, 253, 253, 253),
+                      color: Color.fromARGB(255, 255, 0, 0),
                     ),
                   )
                 ],
