@@ -160,6 +160,7 @@ class _MyHomePageState extends State<MapPage> {
     } else {
       setState(() {
         isAddOn = true;
+        markerController.pinAlreadyExists = false;
         markerController.customMarkers = [];
         _refreshTimer?.cancel();
       });
