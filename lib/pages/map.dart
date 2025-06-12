@@ -184,7 +184,7 @@ class _MyHomePageState extends State<MapPage> {
   void _getPinInfo() {
     dynamic obj = {
       "title": "Λεπτομέρειες σημείου",
-      "bucketsLabel": "Αριθμός δεματιών",
+      "bucketsLabel": "Αριθμός τεμαχίων",
       "bagsLabel": "Αριθμός σάκων",
       "dropdownOptions": ["Ελαιουργείο 1", "Ελαιουργείο 2", "Ελαιουργείο 3"],
       "confirmText": "Αποστολή",
