@@ -36,6 +36,7 @@ class MarkerData {
       state = MarkerState.collected;
       markerColor =const Color.fromARGB(255, 153, 153, 204);
     } else {
+      state = MarkerState.selected;
       markerColor = const Color.fromARGB(255, 21, 13, 253);
     }
   }
@@ -72,5 +73,44 @@ class MarkerData {
       bucketInfo = '${userId.toString()} - ${buckets.toString()} κάδοι';
     }
     return bucketInfo;
+  }
+}
+
+
+
+class MarkerToCollectData {
+  LatLng point;
+  int weight;
+  int ownerId;
+  double distance;
+
+  MarkerToCollectData({
+    required this.point,
+    required this.distance,
+    required this.ownerId,
+    required this.weight
+  });
+
+}
+
+
+
+
+class ShrederData {
+  int id;
+  LatLng point;
+  String description;
+  int closeMarkers;
+  
+
+  ShrederData({
+    required this.id,
+    required this.point,
+    required this.description,
+    required this.closeMarkers
+  }) { init(); }
+
+  void init() {
+    closeMarkers = 0;
   }
 }

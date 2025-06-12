@@ -157,4 +157,24 @@ class API {
       throw Exception('Failed to connect to the API: $error');
     }
   }
+
+
+  Future<List<dynamic>> fetchShrederPoints() async {
+    String baseUrl = server + '/locations/ses/';
+
+    try {
+      final uri = Uri.parse(baseUrl);
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+
+        return data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      throw Exception('Failed to connect to the API: $error');
+    }
+  }
 }

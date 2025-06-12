@@ -92,6 +92,7 @@ class _MyHomePageState extends State<MapPage> {
       setState(() {});
     }, api: _api, context: context);
     markerController.fetchMarkers();
+    markerController.fetchShrederLocations();
     _startMarkersTimer();
     _startRouteTimer();
     _startTransporterPositionRefreshTimer();
@@ -100,6 +101,7 @@ class _MyHomePageState extends State<MapPage> {
   void _startMarkersTimer() {
     _markersRefreshTimer = Timer.periodic(Duration(minutes: 1), (timer) async {
       markerController.fetchMarkers();
+      markerController.fetchShrederLocations();
     });
   }
 
@@ -140,6 +142,7 @@ class _MyHomePageState extends State<MapPage> {
     _api.setShowOption(opt);
 
     markerController.fetchMarkers();
+    markerController.fetchShrederLocations();
   }
 
 
@@ -242,6 +245,7 @@ class _MyHomePageState extends State<MapPage> {
                   markers: [
                     // ...getFactoryMarker(),
                     ...markerController.customMarkers,
+                    ...markerController.shrederMarkers,
                     ...getCarMarker(),
                   ]
                 ),
