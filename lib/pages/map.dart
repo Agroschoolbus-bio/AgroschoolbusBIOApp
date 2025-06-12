@@ -240,7 +240,7 @@ class _MyHomePageState extends State<MapPage> {
                 ),
                 MarkerLayer(
                   markers: [
-                    ...getFactoryMarker(),
+                    // ...getFactoryMarker(),
                     ...markerController.customMarkers,
                     ...getCarMarker(),
                   ]
