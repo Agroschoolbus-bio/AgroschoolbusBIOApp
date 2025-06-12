@@ -37,6 +37,7 @@ class _MyHomePageState extends State<MapPage> {
 
   late UiController ui_ctrl;
   bool isGPSOn = false;
+  bool isAddOn = false;
   Timer? _markersRefreshTimer;
   Timer? _routeRefreshTimer;
   Timer? _transporterPositionRefreshTimer;
@@ -208,6 +209,70 @@ class _MyHomePageState extends State<MapPage> {
   }
 
 
+  void addSinglePin(LatLng point) {
+    if (!isAddOn || markerController.pinAlreadyExists) {
+      return;
+    }
+    setState(() {
+      markerController.buildPinForShreder(point);
+      markerController.pinAlreadyExists = true;
+    });
+  }
+
+
+  void _enableAddLocation() {
+    if (isAddOn) {
+      setState(() {
+        markerController.pinAlreadyExists = false;
+        isAddOn = false;
+        markerController.addedMarkers = [];
+        markerController.fetchMarkers();
+        // _startRefreshTimer();
+        // markerController.fetchMarkers();
+        markerController.fetchShrederLocations();
+        _startMarkersTimer();
+        _startRouteTimer();
+        _startTransporterPositionRefreshTimer();
+      });
+    } else {
+      setState(() {
+        isAddOn = true;
+        markerController.pinAlreadyExists = false;
+        markerController.customMarkers = [];
+        // _refreshTimer?.cancel();
+        _markersRefreshTimer!.cancel();
+        _routeRefreshTimer!.cancel();
+        _transporterPositionRefreshTimer!.cancel();
+      });
+    }
+  }
+
+  void _getPinInfo() {
+    dynamic obj = {
+      "title": "Λεπτομέρειες σημείου",
+      "bucketsLabel": "Αριθμός δεματιών",
+      "bagsLabel": "Αριθμός σάκων",
+      "dropdownOptions": ["Ελαιουργείο 1", "Ελαιουργείο 2", "Ελαιουργείο 3"],
+      "confirmText": "Αποστολή",
+      "cancelText": "Ακύρωση",
+      "onConfirm": (dynamic obj) {
+        // print(obj);
+        _sendPinDetails(obj);
+      }
+    };
+    ui_ctrl.showInputDialog(obj);
+  }
+
+
+  void _sendPinDetails(obj) async {
+    
+    int shrederId = int.parse(obj["ses"]);
+
+    await _api.updateShrederPosition(markerController.addedMarkers[0].point, shrederId);
+    _enableAddLocation();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,10 +292,11 @@ class _MyHomePageState extends State<MapPage> {
           Expanded(
             child: FlutterMap(
               mapController: mapController,
-              options: const MapOptions(
-                initialCenter: LatLng(37.4835, 21.6479),
+              options: MapOptions(
+                onTap: (_, p) => addSinglePin(p),
+                initialCenter: const LatLng(37.4835, 21.6479),
                 initialZoom: 12.0,
-                interactionOptions: InteractionOptions(
+                interactionOptions: const InteractionOptions(
                   flags: ~InteractiveFlag.doubleTapZoom,
                 ),
               ),
@@ -249,6 +315,7 @@ class _MyHomePageState extends State<MapPage> {
                     // ...getFactoryMarker(),
                     ...markerController.customMarkers,
                     ...markerController.shrederMarkers,
+                    ...markerController.addedMarkers,
                     ...getCarMarker(),
                   ]
                 ),
@@ -383,15 +450,15 @@ class _MyHomePageState extends State<MapPage> {
             FloatingActionButton(
               onPressed: () {
                 // Center map action
-              
+                _enableAddLocation();
               },
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "directions",
               tooltip: 'Δημιουργία διαδρομής',
               child: Icon(
-                Icons.directions,
-                color: markerController.isDirectionsOn ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
+                Icons.add_location_alt_outlined,
+                color: isAddOn ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
                 ),
             ),
             const SizedBox(height: 10.0),
@@ -448,6 +515,33 @@ class _MyHomePageState extends State<MapPage> {
         )
       ),
 
+      if (markerController.pinAlreadyExists)
+      Positioned(
+        bottom: 30.0,
+        right: 10.0,
+        child: Column(
+          children: [
+            FloatingActionButton.extended(
+              onPressed: () {
+                // Center map action
+                // _enableOrDisableRoute(1);
+                _getPinInfo();
+              },
+              backgroundColor: bioGreen,
+              foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+              heroTag: "input",
+              tooltip: 'Εισαγωγή',
+              label: const Text('Προσθήκη'),
+              icon: Icon(
+                routeButton[routeStatus],
+                color: filterPins == 2 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+            
+          ]
+        )
+      ),
+
       if (markerController.isDirectionsOn)
       Positioned(
         bottom: 30.0,
@@ -498,6 +592,8 @@ class _MyHomePageState extends State<MapPage> {
           ]
         )
       ),
+
+
       
       ])
       

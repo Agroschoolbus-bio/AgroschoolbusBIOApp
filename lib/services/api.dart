@@ -130,6 +130,37 @@ class API {
       return 3; // Failed to connect to the API
     }
   }
+
+
+  Future<int> updateShrederPosition(LatLng p, int shrederId) async {
+    String baseUrl = server + '/locations/ses/' + shrederId.toString() + '/update/';
+
+    try {
+      final uri = Uri.parse(baseUrl);
+
+      
+      Map<String, String> body = {
+        "latitude": double.parse(p.latitude.toStringAsFixed(6)).toString(),
+        "longitude": double.parse(p.longitude.toStringAsFixed(6)).toString(),
+      };
+
+      final response = await http.patch(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        return 0;
+      } else {
+        return 1; // Got an error status code
+      }
+    } catch (error) {
+      return 3; // Failed to connect to the API
+    }
+  }
   
 
   Future<List<dynamic>> fetchLatLngPoints() async {

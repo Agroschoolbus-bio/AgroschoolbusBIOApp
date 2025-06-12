@@ -26,6 +26,8 @@ class MarkerController {
     int truckCapacity = 20;
     LatLng factoryLocation = LatLng(37.423586, 21.667088);
 
+    bool pinAlreadyExists = false;
+    List<Marker> addedMarkers = [];
     final VoidCallback onMarkersUpdated;
 
     MarkerController({
@@ -317,7 +319,7 @@ class MarkerController {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     Text(
-                      "Παραγωγός: ${markerData.userId}\n Δεμάτια: ${markerData.buckets}",
+                      "Παραγωγός: ${markerData.userId}\n Τεμάχια: ${markerData.buckets}",
                       style: TextStyle(
                           fontSize: 7,
                           color: Colors.black,
@@ -351,7 +353,7 @@ class MarkerController {
                     child: const Icon(
                       Icons.push_pin_outlined,
                       size: 30,
-                      color: Color.fromARGB(255, 253, 253, 253),
+                      color: Color.fromARGB(255, 255, 0, 0),
                     ),
                   )
                 ],
@@ -384,6 +386,47 @@ class MarkerController {
         );
       },
     );
+    }
+
+
+    void removeAddedMarker() {
+      addedMarkers = [];
+      pinAlreadyExists = false;
+      onMarkersUpdated();
+    }
+
+    void buildPinForShreder(LatLng p) {
+    
+        // markerColors[point] =  Color.fromARGB(255, 46, 135, 1);
+        addedMarkers.add(Marker(
+            point: p,
+            width: 60,
+            height: 60,
+            child: GestureDetector(
+                onTap: () {
+                  removeAddedMarker();
+                },
+                child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                    Text(
+                    "Νέο σημείο",
+                    style: TextStyle(
+                        fontSize: 7,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        backgroundColor: Colors.white.withOpacity(0.7),
+                    ),
+                    ),
+                    const Icon(
+                    Icons.location_pin,
+                    size: 30,
+                    color: Color.fromARGB(255, 201, 4, 4),
+                    ),
+                ],
+                ),
+            ),
+        ));
     }
     
 
