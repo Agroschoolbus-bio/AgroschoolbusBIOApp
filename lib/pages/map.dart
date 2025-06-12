@@ -43,6 +43,7 @@ class _MyHomePageState extends State<MapPage> {
   bool isGPSOn = false;
   Timer? _locationTimer;
   Timer? _gpsSimulatorTimer;
+  Timer? _routeDetailsTimer;
   Position? currentSimulatedPosition;
   bool _isProcessingLocationUpdate = false; // to avoid overlapping calls when sending GPS point during navigation
 
@@ -125,6 +126,15 @@ class _MyHomePageState extends State<MapPage> {
     
   }
 
+
+  void _startRouteDetailsTimer() {
+    _routeDetailsTimer = Timer.periodic(const Duration(seconds: 30), (timer) async {
+      setState(() {
+        _sendRouteInfo(true);
+      });
+    });
+  }
+
   
   void getTruckCapacity() {
     dynamic obj = {
@@ -165,7 +175,7 @@ class _MyHomePageState extends State<MapPage> {
   }
 
 
-  Future<void> _sendRouteInfo() async {
+  Future<void> _sendRouteInfo(bool daemonMode) async {
     Map<String, dynamic> routeDetails;
     if (_currentPosition != null) {
       routeDetails = {
@@ -212,8 +222,9 @@ class _MyHomePageState extends State<MapPage> {
         "confirmText": "Κατάλαβα",
       };
     }
-    
-    ui_ctrl.showDialogBox(obj);
+    if (!daemonMode){
+      ui_ctrl.showDialogBox(obj);
+    }
   }
 
 
@@ -336,6 +347,7 @@ class _MyHomePageState extends State<MapPage> {
       _currentPosition = null;
       centerMap();
     }
+    _routeDetailsTimer?.cancel();
   }
 
   // void _togglePositionSubscription() {
@@ -363,7 +375,8 @@ class _MyHomePageState extends State<MapPage> {
           routeStatus = 1;
         });
         await _setupLocationStream();
-        _sendRouteInfo();
+        _sendRouteInfo(false);
+        _startRouteDetailsTimer();
         // startGPSSimulatorTimer();
       },
     };
