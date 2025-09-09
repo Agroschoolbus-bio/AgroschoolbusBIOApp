@@ -76,7 +76,7 @@ class OsrmApi {
   }
 
   Future<List<List<double>>> fetchDirections() async {
-    const osrm = 'http://147.102.160.160:5000/trip/v1/driving/';
+    const osrm = 'http://147.102.160.160:5000/route/v1/driving/';
 
     
     String points = addPointsToString();
@@ -86,18 +86,15 @@ class OsrmApi {
       final uri = Uri.parse(url).replace(
         queryParameters: {
           'overview': "full",
-          'geometries': "polyline",
-          // 'steps': "true",
-          'roundtrip': "true"
+          'geometries': "polyline"
         },
       );
-      // print(uri);
       final response = await http.get(uri);
 
       
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-        final encodedPolyline = data['trips'][0]['geometry'];
+        final encodedPolyline = data['routes'][0]['geometry'];
         route = encodedPolyline;
         return decodePolyline(encodedPolyline);
         // parseOSRMResponse(data);

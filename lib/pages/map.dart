@@ -36,12 +36,14 @@ class _MyHomePageState extends State<MapPage> {
   Stream<Position>? _positionStream;
   StreamSubscription<Position>? _positionSubscription;
   Position? _currentPosition;
+  
   late LatLng cur = LatLng(37.4835, 21.6479);
 
   late UiController ui_ctrl;
   bool isGPSOn = false;
   Timer? _locationTimer;
   Timer? _gpsSimulatorTimer;
+  Timer? _routeDetailsTimer;
   Position? currentSimulatedPosition;
   bool _isProcessingLocationUpdate = false; // to avoid overlapping calls when sending GPS point during navigation
 
@@ -57,6 +59,9 @@ class _MyHomePageState extends State<MapPage> {
   // Timer? _timer;
   late API _api;
   late OsrmApi osrm_api;
+
+
+  Color bioGreen = Color.fromARGB(255, 154, 196, 58);
 
 
   final List<IconData> menuIcons = [
@@ -103,8 +108,8 @@ class _MyHomePageState extends State<MapPage> {
       setState(() {});
     }, api: _api, context: context);
     markerController.fetchMarkers();
+    markerController.fetchShrederLocations();
     _startLocationTimer();
-    
   }
 
   bool _dialogShown = false;
@@ -121,11 +126,20 @@ class _MyHomePageState extends State<MapPage> {
     
   }
 
+
+  void _startRouteDetailsTimer() {
+    _routeDetailsTimer = Timer.periodic(const Duration(seconds: 30), (timer) async {
+      setState(() {
+        _sendRouteInfo(true);
+      });
+    });
+  }
+
   
   void getTruckCapacity() {
     dynamic obj = {
       "title": "Χωρητικότητα φορτηγού",
-      "message": "Παρακαλώ, εισάγετε τη χωρητικότητα του φορτηγού σε μονάδες. Ένας κάδος αντιστοιχεί σε 1 μονάδα ενώ ένας σάκος σε 2.",
+      "message": "Παρακαλώ, εισάγετε τη χωρητικότητα του φορτηγού σε τεμάχια.",
       "capacityLabel": "Θετικός, ακέραιος αριθμός",
       "cancelText": "Ακύρωση",
       "onConfirm": (capacity) {
@@ -138,6 +152,21 @@ class _MyHomePageState extends State<MapPage> {
   }
 
 
+  void getRoutingAlgorithm() {
+    dynamic obj = {
+      
+      "onConfirm": (selected) {
+        // markerController.truckCapacity = int.parse(capacity);   
+        markerController.pointSelectionAlgorithm = int.parse(selected);
+        // print(markerController.pointSelectionAlgorithm);
+      },
+      "ConfirmText": "Συνέχεια"
+    };
+    ui_ctrl.showOptionDialog(obj);
+    
+  }
+
+
   void _setShowOption(int opt) {
     filterPins = opt;
     _api.setShowOption(opt);
@@ -146,7 +175,7 @@ class _MyHomePageState extends State<MapPage> {
   }
 
 
-  Future<void> _sendRouteInfo() async {
+  Future<void> _sendRouteInfo(bool daemonMode) async {
     Map<String, dynamic> routeDetails;
     if (_currentPosition != null) {
       routeDetails = {
@@ -193,8 +222,9 @@ class _MyHomePageState extends State<MapPage> {
         "confirmText": "Κατάλαβα",
       };
     }
-    
-    ui_ctrl.showDialogBox(obj);
+    if (!daemonMode){
+      ui_ctrl.showDialogBox(obj);
+    }
   }
 
 
@@ -317,6 +347,7 @@ class _MyHomePageState extends State<MapPage> {
       _currentPosition = null;
       centerMap();
     }
+    _routeDetailsTimer?.cancel();
   }
 
   // void _togglePositionSubscription() {
@@ -344,7 +375,8 @@ class _MyHomePageState extends State<MapPage> {
           routeStatus = 1;
         });
         await _setupLocationStream();
-        _sendRouteInfo();
+        _sendRouteInfo(false);
+        _startRouteDetailsTimer();
         // startGPSSimulatorTimer();
       },
     };
@@ -625,8 +657,9 @@ class _MyHomePageState extends State<MapPage> {
                 ),
                 MarkerLayer(
                   markers: [
-                    ...getFactoryMarker(),
+                    // ...getFactoryMarker(),
                     ...markerController.customMarkers,
+                    ...markerController.shrederMarkers,
                     ...getCarMarker(),
                   ]
                 ),
@@ -671,7 +704,7 @@ class _MyHomePageState extends State<MapPage> {
                   mapController.camera.zoom + 1,
                 );
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "zoomIn",
               tooltip: 'Μεγέθυνση',
@@ -686,7 +719,7 @@ class _MyHomePageState extends State<MapPage> {
                   mapController.camera.zoom - 1,
                 );
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "zoomOut",
               tooltip: 'Σμίκρυνση',
@@ -698,7 +731,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 centerMap();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "centerMap",
               tooltip: 'Εστίαση',
@@ -720,10 +753,10 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _setShowOption(1);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "yesterday",
-              tooltip: 'Όλα τα δοχεία',
+              tooltip: 'Όλα τα τεμάχια',
               child: Icon(
                 Icons.calendar_month,
                 color: filterPins == 1 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -735,10 +768,10 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _setShowOption(2);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today",
-              tooltip: 'Σημερινά δοχεία',
+              tooltip: 'Σημερινά τεμάχια',
               child: Icon(
                 Icons.today,
                 color: filterPins == 2 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -750,10 +783,10 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _setShowOption(3);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today1",
-              tooltip: 'Μη συλλεχθέντα, σημερινά δοχεία',
+              tooltip: 'Μη συλλεχθέντα, σημερινά τεμάχια',
               child: Icon(
                 Icons.calendar_view_week,
                 color: filterPins == 3 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -773,7 +806,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _loadPreviousRoutePart();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "previousRoutePart",
               tooltip: 'Προηγούμενο μέρος διαδρομής',
@@ -787,7 +820,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _loadNextRoutePart();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "routePart",
               tooltip: 'Επόμενο μέρος διαδρομής',
@@ -800,12 +833,27 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 getTruckCapacity();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "points",
               tooltip: 'Αυτόματη επιλογή σημείων',
               child: const Icon(
                 Icons.display_settings_outlined,
+                color: Color.fromARGB(255, 255, 255, 255),
+                ),
+            ),
+            const SizedBox(height: 10.0),
+            FloatingActionButton(
+              onPressed: () {
+                // Center map action
+                getRoutingAlgorithm();
+              },
+              backgroundColor: bioGreen,
+              foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+              heroTag: "points",
+              tooltip: 'Αυτόματη επιλογή σημείων',
+              child: const Icon(
+                Icons.tips_and_updates,
                 color: Color.fromARGB(255, 255, 255, 255),
                 ),
             ),
@@ -815,7 +863,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 newPathCreation();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "path creation",
               tooltip: 'Δημιουργία νέου μονοπατιού',
@@ -826,12 +874,12 @@ class _MyHomePageState extends State<MapPage> {
             ),
             const SizedBox(height: 10.0),
             FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 // Center map action
                 markerController.chooseMarkersToCollect();
                 _fetchRoute();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "points",
               tooltip: 'Αυτόματη επιλογή σημείων',
@@ -846,7 +894,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _fetchRoute();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "directions",
               tooltip: 'Δημιουργία διαδρομής',
@@ -862,7 +910,7 @@ class _MyHomePageState extends State<MapPage> {
                 // _fetchDirections();
                 // _togglePositionSubscription();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "navigation",
               tooltip: 'Πλοήγηση',
@@ -877,7 +925,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _changeTiles();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "terrain",
               tooltip: 'Αλλαγή χάρτη',
@@ -897,7 +945,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _toggleButtons();
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "menu",
               tooltip: 'Επιλογές',
@@ -920,7 +968,7 @@ class _MyHomePageState extends State<MapPage> {
                 // Center map action
                 _enableOrDisableRoute(1);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "start",
               tooltip: 'Εκκίνηση',
@@ -946,7 +994,7 @@ class _MyHomePageState extends State<MapPage> {
                 cancelRouteRequest();
                 // _enableOrDisableRoute(0);
               },
-              backgroundColor: const Color.fromARGB(255, 114, 157, 55),
+              backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "stop",
               tooltip: 'Ακύρωση',
