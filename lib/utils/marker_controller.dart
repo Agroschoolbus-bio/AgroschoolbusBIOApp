@@ -176,7 +176,7 @@ class MarkerController {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     Text(
-                    "UID: " + markerData.userId.toString() + " - B#: " + markerData.buckets.toString(),
+                    "UID: " + markerData.userId.toString() + " - T#: " + markerData.buckets.toString(),
                     style: TextStyle(
                         fontSize: 7,
                         color: Colors.black,

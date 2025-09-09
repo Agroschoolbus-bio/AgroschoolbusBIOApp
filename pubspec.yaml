@@ -63,15 +63,26 @@ dev_dependencies:
 #   remove_alpha_ios: true
 #   ios: true
 
-flutter_launcher_icons:
-  image_path: "assets/icons/agro_icon.png"
-  android: "launcher_icon"
-  remove_alpha_ios: true
-  ios: true
-  min_sdk_android: 16 # android min sdk min:16, default 21
-  macos:
-    generate: true
-    image_path: "assets/icons/agro_icon.png"
+# flutter_launcher_icons:
+#   image_path: "assets/icons/bio.jpeg"
+#   android: "launcher_icon"
+#   remove_alpha_ios: true
+#   ios: true
+#   min_sdk_android: 16 # android min sdk min:16, default 21
+#   macos:
+#     generate: true
+#     image_path: "assets/icons/bio.jpeg"
+
+################### NOTE ######################
+#                                             #
+# flutter_launcher_icons.yaml file for icons  #
+# flutter pub run flutter_launcher_icons:main #
+#                                             #
+################# END NOTE ####################
+  
+  # android: true
+  # ios: true
+  # image_path: "assets/icon/app_icon.png"
   
 
 # The following section is specific to Flutter packages.
@@ -84,9 +95,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/icons/agro_icon.png
     - assets/icons/car.png
     - assets/icons/factory.png
+    - assets/icons/bio.jpeg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

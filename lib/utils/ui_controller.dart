@@ -59,8 +59,8 @@ class UiController {
 
   void showInputDialog(Map<String, dynamic> obj) {
     TextEditingController bucketsInput = TextEditingController();
-    TextEditingController bagsInput = TextEditingController();
-    String dropdownValue = obj["dropdownOptions"]?[0] ?? "Ελαιουργείο 1"; 
+    // TextEditingController bagsInput = TextEditingController();
+    // String dropdownValue = obj["dropdownOptions"]?[0] ?? "Ελαιουργείο 1"; 
 
     showDialog(
       context: context,
@@ -76,29 +76,29 @@ class UiController {
                     controller: bucketsInput,
                     decoration: InputDecoration(labelText: obj["bucketsLabel"] ?? "Κάδοι"),
                   ),
-                  TextField(
-                    controller: bagsInput,
-                    decoration: InputDecoration(labelText: obj["bagsLabel"] ?? "Σακιά"),
-                  ),
-                  SizedBox(height: 10),
-                  DropdownButton<String>(
-                    value: dropdownValue,
-                    isExpanded: true,
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          dropdownValue = newValue;
-                        });
-                      }
-                    },
-                    items: (obj["dropdownOptions"] ?? ["Ελαιοτριβείο 1", "Ελαιοτριβείο 2", "Ελαιοτριβείο 3"])
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
+                  // TextField(
+                  //   controller: bagsInput,
+                  //   decoration: InputDecoration(labelText: obj["bagsLabel"] ?? "Σακιά"),
+                  // ),
+                  // SizedBox(height: 10),
+                  // DropdownButton<String>(
+                  //   value: dropdownValue,
+                  //   isExpanded: true,
+                  //   onChanged: (String? newValue) {
+                  //     if (newValue != null) {
+                  //       setState(() {
+                  //         dropdownValue = newValue;
+                  //       });
+                  //     }
+                  //   },
+                  //   items: (obj["dropdownOptions"] ?? ["Ελαιοτριβείο 1", "Ελαιοτριβείο 2", "Ελαιοτριβείο 3"])
+                  //       .map<DropdownMenuItem<String>>((String value) {
+                  //     return DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: Text(value),
+                  //     );
+                  //   }).toList(),
+                  // ),
                 ],
               ),
               actions: [
@@ -113,8 +113,8 @@ class UiController {
                     if (obj["onConfirm"] is Function) {
                       obj["onConfirm"]({
                         "buckets": bucketsInput.text,
-                        "bags": bagsInput.text,
-                        "factory": dropdownValue,
+                        // "bags": bagsInput.text,
+                        // "factory": dropdownValue,
                       });
                     }
                     Navigator.of(dialogContext).pop();
