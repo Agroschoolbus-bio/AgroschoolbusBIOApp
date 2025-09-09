@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'package:agroschoolbus/utils/enum_types.dart';
 import './marker_data.dart';
 import '../services/api.dart';
+import '../services/gps.dart';
+
+import 'dart:math';
 
 
 class MarkerController {
@@ -12,12 +16,18 @@ class MarkerController {
     BuildContext context;
     List<LatLng> selectedPoints = [];
     List<Marker> customMarkers = [];
+    List<Marker> shrederMarkers = [];
+    Map<int, ShrederData> shredersDataList = {};
     Map<LatLng, MarkerData> markersDataList = {};
+    List<MarkerToCollectData> pendingMarkers = [];
     API api;
     bool isDirectionsOn = false;
     bool allCollected = false;
+    int truckCapacity = 20;
     LatLng factoryLocation = LatLng(37.423586, 21.667088);
 
+    bool pinAlreadyExists = false;
+    List<Marker> addedMarkers = [];
     final VoidCallback onMarkersUpdated;
 
     MarkerController({
@@ -50,6 +60,142 @@ class MarkerController {
             return buildPin(markerData);
           }).toList();
       });
+      onMarkersUpdated();
+    }
+
+
+    void fetchShrederLocations() async {
+      await api.fetchShrederPoints().then((markers) {
+        shrederMarkers = markers.map((item) {
+          final int id = item['id'];
+          
+          final latitude = double.parse(item['latitude']);
+          final longitude = double.parse(item['longitude']);
+
+          final String desc = item['description'];
+
+          LatLng latLng = LatLng(latitude, longitude);
+          ShrederData markerData = ShrederData(id: id, point: latLng, description: desc, closeMarkers: 0);
+          shredersDataList[id] = markerData;
+
+          return buildShrederPin(LatLng(latitude, longitude));
+        }).toList();
+      });
+      onMarkersUpdated();
+    }
+
+
+    double calculateDistance(LatLng point1, LatLng point2) {
+      const double latScale = 111.32; 
+      const double lonScale = 111.32;
+
+      double dLat = point2.latitude - point1.latitude;
+      double dLon = point2.longitude - point1.longitude;
+      double latDistance = dLat * latScale;
+      double lonDistance = dLon * lonScale;
+
+      double distance = sqrt(latDistance * latDistance + lonDistance * lonDistance);
+      return distance;
+    }
+
+    int findClosestShrederPoint() {
+      double min, temp;
+      int min_idx;
+      shredersDataList.forEach((key, value) {
+        value.closeMarkers = 0;
+      });
+      
+      for (int i=0; i < selectedPoints.length; i++) {
+        min = calculateDistance(shredersDataList[1]!.point, selectedPoints[i]);
+        min_idx = 1;
+        shredersDataList.forEach((key, value) {
+          temp = calculateDistance(value.point, selectedPoints[i]);
+          if (temp < min) {
+            min = temp;
+            min_idx = key;
+          } 
+        });
+        shredersDataList[min_idx]!.closeMarkers += 1;
+      }
+      int max_counter = 0;
+      int max_id = 1;
+      shredersDataList.forEach((key, value) {
+        if (value.closeMarkers > max_counter) {
+          max_counter = value.closeMarkers;
+          max_id = key;
+        }
+      });
+
+      return max_id;
+
+    }
+
+
+    void chooseMarkersToCollect() async {
+      // Position? instantPosition;
+      // instantPosition = await determinePosition();
+
+      selectedPoints = [];
+      pendingMarkers = [];
+      // selectedPoints.add(LatLng(instantPosition.latitude, instantPosition.longitude));
+      selectedPoints.add(factoryLocation);
+      print(selectedPoints);
+      LatLng p;
+      Map<LatLng, int> lupt = {};
+      for (int i = 0; i < customMarkers.length; i++) {
+        p = customMarkers[i].point;
+        if (markersDataList[p]!.state == MarkerState.pending) {
+          lupt[p] = i;
+          int weight = markersDataList[p]!.buckets;
+          pendingMarkers.add(MarkerToCollectData(
+            point: p, 
+            distance: calculateDistance(p, factoryLocation), 
+            ownerId: markersDataList[p]!.userId, 
+            weight: weight));
+        }
+      }
+
+      Map<int, int> ownerCounts = {};
+
+      for (var item in pendingMarkers) {
+        ownerCounts[item.ownerId] = (ownerCounts[item.ownerId] ?? 0) + 1;
+      }
+
+      pendingMarkers.sort((a, b) {
+        int dComparison = a.distance.compareTo(b.distance);
+        if (dComparison != 0) {
+          return dComparison;
+        }
+        int ownerFreqA = ownerCounts[a.ownerId] ?? 0;
+        int ownerFreqB = ownerCounts[b.ownerId] ?? 0;
+
+        return ownerFreqA.compareTo(ownerFreqB);
+      });
+
+      int totalWeight = 0;
+      for (var item in pendingMarkers) {
+        if (totalWeight + item.weight <= truckCapacity) {
+          selectedPoints.add(item.point);
+          updateMarkerDetailsOnServer(markersDataList[item.point]!.id, "selected");
+          markersDataList[item.point]!.state = MarkerState.selected;
+          markersDataList[item.point]!.markerColor = const Color.fromARGB(255, 21, 13, 253);
+          totalWeight += item.weight;
+
+          customMarkers[lupt[item.point]!] = buildPin(markersDataList[item.point]!);
+
+          ownerCounts[item.ownerId] = (ownerCounts[item.ownerId] ?? 1) - 1;
+          if (ownerCounts[item.ownerId] == 0) {
+            ownerCounts.remove(item.ownerId);
+          }
+        }
+      }
+
+      int shrederId = findClosestShrederPoint();
+      print(shrederId);
+      selectedPoints.add(shredersDataList[shrederId]!.point);
+
+      print(selectedPoints);
+
       onMarkersUpdated();
     }
 
@@ -167,19 +313,20 @@ class MarkerController {
             height: 60,
             child: GestureDetector(
                 onTap: () {
-                // tapOnMarker(markerData.point);
+                tapOnMarker(markerData.point);
                 },
                 child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     Text(
-                    "UID: " + markerData.userId.toString() + " - B#: " + markerData.buckets.toString(),
-                    style: TextStyle(
-                        fontSize: 7,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        backgroundColor: Colors.white.withOpacity(0.7),
-                    ),
+                      "Παραγωγός: ${markerData.userId}\n Τεμάχια: ${markerData.buckets}",
+                      style: TextStyle(
+                          fontSize: 7,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          backgroundColor: Colors.white.withOpacity(0.7),
+                      ),
+                      textAlign: TextAlign.center
                     ),
                     Icon(
                     Icons.location_pin,
@@ -189,6 +336,28 @@ class MarkerController {
                 ],
                 ),
             ),
+        );
+    }
+
+    Marker buildShrederPin(LatLng p) {
+    
+        return Marker(
+            point: p,
+            width: 60,
+            height: 60,
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Transform.rotate(
+                    angle: 0.8, 
+                    child: const Icon(
+                      Icons.push_pin_outlined,
+                      size: 30,
+                      color: Color.fromARGB(255, 255, 0, 0),
+                    ),
+                  )
+                ],
+                ),
         );
     }
 
@@ -217,6 +386,47 @@ class MarkerController {
         );
       },
     );
+    }
+
+
+    void removeAddedMarker() {
+      addedMarkers = [];
+      pinAlreadyExists = false;
+      onMarkersUpdated();
+    }
+
+    void buildPinForShreder(LatLng p) {
+    
+        // markerColors[point] =  Color.fromARGB(255, 46, 135, 1);
+        addedMarkers.add(Marker(
+            point: p,
+            width: 60,
+            height: 60,
+            child: GestureDetector(
+                onTap: () {
+                  removeAddedMarker();
+                },
+                child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                    Text(
+                    "Νέο σημείο",
+                    style: TextStyle(
+                        fontSize: 7,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        backgroundColor: Colors.white.withOpacity(0.7),
+                    ),
+                    ),
+                    const Icon(
+                    Icons.location_pin,
+                    size: 30,
+                    color: Color.fromARGB(255, 201, 4, 4),
+                    ),
+                ],
+                ),
+            ),
+        ));
     }
     
 

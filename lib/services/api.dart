@@ -130,6 +130,37 @@ class API {
       return 3; // Failed to connect to the API
     }
   }
+
+
+  Future<int> updateShrederPosition(LatLng p, int shrederId) async {
+    String baseUrl = server + '/locations/ses/' + shrederId.toString() + '/update/';
+
+    try {
+      final uri = Uri.parse(baseUrl);
+
+      
+      Map<String, String> body = {
+        "latitude": double.parse(p.latitude.toStringAsFixed(6)).toString(),
+        "longitude": double.parse(p.longitude.toStringAsFixed(6)).toString(),
+      };
+
+      final response = await http.patch(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        return 0;
+      } else {
+        return 1; // Got an error status code
+      }
+    } catch (error) {
+      return 3; // Failed to connect to the API
+    }
+  }
   
 
   Future<List<dynamic>> fetchLatLngPoints() async {
@@ -144,6 +175,26 @@ class API {
           'created_at__lte': query['created_at__lte']
         },
       );
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+
+        return data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      throw Exception('Failed to connect to the API: $error');
+    }
+  }
+
+
+  Future<List<dynamic>> fetchShrederPoints() async {
+    String baseUrl = server + '/locations/ses/';
+
+    try {
+      final uri = Uri.parse(baseUrl);
       final response = await http.get(uri);
 
       if (response.statusCode == 200) {
