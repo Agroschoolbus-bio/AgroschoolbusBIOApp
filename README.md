@@ -7,7 +7,6 @@
 ## _Optimization of Collection and Management of Olive Pruning Residues._
 This software was developed on behalf of [ICCS](https://www.iccs.gr/) for the project [Agroschoolbus.BIO](https://www.agroschoolbusbio.gr/)
 
-3 distinct applications
 
 ### Producer 
  
@@ -17,9 +16,7 @@ This software was developed on behalf of [ICCS](https://www.iccs.gr/) for the pr
  - Add new ROI automatically using GPS
  - Review the current status of the ROIs
 
-Source: https://github.com/Agroschoolbus-bio/application/tree/producer_v1
-
-Sample screenshots:
+## Sample screenshots:
 
 
 <img width="2520" height="1116" alt="login" src="https://github.com/user-attachments/assets/08395aca-fcc3-4bcb-b9d8-7f7017f33226" />
