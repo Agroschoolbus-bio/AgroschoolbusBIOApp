@@ -32,14 +32,14 @@ Source: https://github.com/Agroschoolbus-bio/application/tree/producer_v1
 Source: https://github.com/Agroschoolbus-bio/application/tree/transporter_v1
 
 
-### Mill
+### Compost Operator
  - Display all user's ROIs
  - Apply filters to those ROIs
  - Supervise transporter's current route
  - Supervise transporter's current position
  - Review the current status of ROIs
 
-Source: https://github.com/Agroschoolbus-bio/application/tree/factory_v1
+Source: https://github.com/Agroschoolbus-bio/application/tree/compost_op_v1
 
 ## Backend
 
