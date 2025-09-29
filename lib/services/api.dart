@@ -12,7 +12,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class API {
   final BuildContext context;
-  String server = "http://147.102.160.160:8000";
+  String server = "http://147.102.160.160:8001";
   String pageText='';
   List<Marker> customMarkers = [];
   List<LatLng> selectedPoints = [];
@@ -133,7 +133,7 @@ class API {
 
 
   Future<int> sendLocation(Map<String, dynamic> pinDetails) async {
-    var url = Uri.parse('http://147.102.160.160:8000/locations/add-location/');
+    var url = Uri.parse(server + '/locations/add-location/');
 
     
     Map<String, String> body = {
@@ -182,6 +182,60 @@ class API {
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
+
+        return data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      throw Exception('Failed to connect to the API: $error');
+    }
+  }
+
+
+
+  Future<int> addUser(Map<String, dynamic> userDetails) async {
+    var url = Uri.parse(server + '/locations/add-user/');
+
+    
+    Map<String, String> body = {
+      "id": userDetails["id"],
+      "name": userDetails['name'],
+      "lastname": userDetails['lastname'],
+      "username": userDetails['username']
+    };
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // var data = jsonDecode(response.body);
+        return 0;
+      } else {
+        return 1;
+      }
+    } catch (e) {
+      return 2;
+    }
+  }
+
+
+  Future<Map<String, dynamic>> fetchUserDetails(userId) async {
+    String baseUrl = server + '/locations/users/' + userId + '/';
+    print(baseUrl);
+
+    try {
+      final uri = Uri.parse(baseUrl);
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
 
         return data;
       } else {

@@ -16,16 +16,16 @@ class _LoginPageState extends State<LoginPage> {
 
   void _getInput() {
     // Get the text from the TextEditingController
-    if (emailController.text == "") {
-      return;
-    }
-    if (emailController.text != "1" && emailController.text != "2" && emailController.text != "3") {
-      return;
-    }
+    // if (emailController.text == "") {
+    //   return;
+    // }
+    // if (emailController.text != "1" && emailController.text != "2" && emailController.text != "3") {
+    //   return;
+    // }
     
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MapPage(title: 'Map Page', userId: emailController.text)),
+        MaterialPageRoute(builder: (context) => MapPage(title: 'Map Page', userId: "SG9wjiW32pQZtzlavq7iW0DKlZ02")),
       );
     // String inputEmail = emailController.text;
     // String inputPass = passController.text;
