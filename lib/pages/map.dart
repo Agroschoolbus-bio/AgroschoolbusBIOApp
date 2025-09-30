@@ -160,6 +160,11 @@ class _MyHomePageState extends State<MapPage> {
       });
     } else {
       setState(() {
+        dynamic obj = {
+          "title": "Προσθήκη σημείου",
+          "message": "Μπορείτε να προσθέσετε νέο σημείο είτε χειροκίνητα είτε χρησιμοποιώντας GPS.", 
+        };
+        ui_ctrl.showDialogBox(obj);
         isAddOn = true;
         markerController.pinAlreadyExists = false;
         markerController.customMarkers = [];
@@ -393,7 +398,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "yesterday",
-              tooltip: 'Όλα τα δοχεία',
+              tooltip: 'Όλα τα τεμάχια',
               child: Icon(
                 Icons.calendar_month,
                 color: filterPins == 1 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -408,7 +413,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today",
-              tooltip: 'Σημερινά δοχεία',
+              tooltip: 'Σημερινά τεμάχια',
               child: Icon(
                 Icons.today,
                 color: filterPins == 2 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -423,7 +428,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today1",
-              tooltip: 'Μη συλλεχθέντα, σημερινά δοχεία',
+              tooltip: 'Μη συλλεχθέντα, σημερινά τεμάχια',
               child: Icon(
                 Icons.calendar_view_week,
                 color: filterPins == 3 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -445,13 +450,14 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "directions",
-              tooltip: 'Δημιουργία διαδρομής',
+              tooltip: 'Προσθήκη σημείου',
               child: Icon(
                 Icons.add_location_alt_outlined,
                 color: isAddOn ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
                 ),
             ),
             const SizedBox(height: 10.0),
+            if (isAddOn == true)
             FloatingActionButton(
               onPressed: () {
                 // Center map action
@@ -462,7 +468,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "navigation",
-              tooltip: 'Πλοήγηση',
+              tooltip: 'Χρήση GPS',
               child: Icon(
                 Icons.navigation,
                 color: isGPSOn ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
