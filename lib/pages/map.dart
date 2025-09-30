@@ -455,7 +455,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "directions",
-              tooltip: 'Προσθήκη σημείου κομποστοποίησης',
+              tooltip: 'Τροποποίηση σημείου κομποστοποίησης',
               child: Icon(
                 Icons.add_location_alt_outlined,
                 color: isAddOn ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
