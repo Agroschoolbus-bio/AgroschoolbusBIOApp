@@ -1,25 +1,21 @@
-# AgroSchoolBus - Transporter App
 
-Application for organizing the collection of olive fruit.
-
-## Getting Started
-
-This will be a living document for tracking down the updates during the development.
-
-Current stage of the project:
-
- - Interactive openstreet maps
- - Addition of markers on tapping
- - Login page
- - Main page
- - Current GPS position
+<img width="200" height="200" alt="upscalemedia-transformed" src="https://github.com/user-attachments/assets/815419a1-3456-400f-aa2a-26d6f2841aba" />
 
 
-<img width="200" alt="Screenshot 2024-10-10 at 2 25 09 PM" src="https://github.com/user-attachments/assets/61778869-912f-440c-b8b8-655c142dd5af">
+# Agroschoolbus.BIO
 
-<img width="200" alt="Screenshot 2024-10-10 at 2 25 34 PM" src="https://github.com/user-attachments/assets/b135cf63-b719-4c62-9920-e87f6eb86776">
-<img width="200" alt="Screenshot 2024-10-10 at 2 26 11 PM" src="https://github.com/user-attachments/assets/dd37ec48-4f37-4938-99f4-b7ad666a43b4">
-<img width="200" alt="Screenshot 2024-05-31 at 10 37 50 PM" src="https://github.com/itzortzis/agroschoolbus/assets/105294556/8df6083c-9b24-4801-900c-61839183e6a1">
+## _Optimization of Collection and Management of Olive Pruning Residues._
+This software was developed on behalf of [ICCS](https://www.iccs.gr/) for the project [Agroschoolbus.BIO](https://www.agroschoolbusbio.gr/)
 
+### Compost Operator
+ - Display all user's ROIs
+ - Apply filters to those ROIs
+ - Supervise transporter's current route
+ - Supervise transporter's current position
+ - Review the current status of ROIs
 
-<img width="200" alt="Screenshot 2024-06-01 at 12 32 52 AM" src="https://github.com/itzortzis/agroschoolbus/assets/105294556/fedabab4-2ac9-4f9d-b8fb-b3741ae41c4b">
+Source: https://github.com/Agroschoolbus-bio/application/tree/compost_op_v1
+
+<img width="512" height="275" alt="compost_op_1" src="https://github.com/user-attachments/assets/2d994adf-3697-4697-a10c-a994b74c2507" />
+
+<img width="512" height="276" alt="compost_op_2" src="https://github.com/user-attachments/assets/83838917-8c22-4ce3-b7d1-16921e147b5b" />
