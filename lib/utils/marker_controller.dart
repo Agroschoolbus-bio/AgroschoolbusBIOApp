@@ -46,7 +46,7 @@ class MarkerController {
             final longitude = double.parse(item['longitude']);
             final status = item['status'].toString();
             final int buckets = item['buckets'];
-            final int user = item['user'];
+            final String user = item['user'];
             final int bags = item['bags'];
             final String mill = item['mill'];
 
@@ -59,6 +59,7 @@ class MarkerController {
             return buildPin(markerData);
           }).toList();
       });
+      // initMarkers();
       onMarkersUpdated();
     }
 
@@ -145,10 +146,15 @@ class MarkerController {
     void pointSelectionAlgorithm_1() async {
       Position? instantPosition;
       instantPosition = await determinePosition();
+      // print(instantPosition);
+      // LatLng instantPosition = LatLng(37.465888, 21.643606);
 
       selectedPoints = [];
       pendingMarkers = [];
       selectedPoints.add(LatLng(instantPosition.latitude, instantPosition.longitude));
+      // selectedPoints.add(LatLng(37.465888, 21.643606));
+      // print(selectedPoints);
+      // print(selectedPoints);
       // selectedPoints.add(factoryLocation);
       // print(selectedPoints);
       LatLng p;
@@ -166,7 +172,7 @@ class MarkerController {
         }
       }
 
-      Map<int, int> ownerCounts = {};
+      Map<String, int> ownerCounts = {};
 
       for (var item in pendingMarkers) {
         ownerCounts[item.ownerId] = (ownerCounts[item.ownerId] ?? 0) + 1;
@@ -251,7 +257,7 @@ class MarkerController {
         }
       }
 
-      Map<int, int> ownerCounts = {};
+      Map<String, int> ownerCounts = {};
 
       for (var item in pendingMarkers) {
         ownerCounts[item.ownerId] = (ownerCounts[item.ownerId] ?? 0) + 1;
@@ -369,6 +375,25 @@ class MarkerController {
     }
 
 
+    void initMarkers() async {
+      print("xaxaxaxaxa");
+      print(customMarkers.length);
+      for (int i = 0; i < customMarkers.length; i++) {
+          print(markersDataList[customMarkers[i].point]);
+          if (markersDataList[customMarkers[i].point]!.state == MarkerState.selected) {
+            updateMarkerDetailsOnServer(markersDataList[customMarkers[i].point]!.id, "pending");
+            markersDataList[customMarkers[i].point]!.state = MarkerState.pending;
+            markersDataList[customMarkers[i].point]!.markerColor = const Color.fromARGB(255, 201, 4, 4);
+            customMarkers[i] = buildPin(markersDataList[customMarkers[i].point]!);
+          }
+        }
+
+        // selectedPoints = [];
+        // selectedPoints.add(factoryLocation);
+        onMarkersUpdated();
+    }
+
+
     void completeRoute() {
         
         for (int i = 0; i < customMarkers.length; i++) {
@@ -392,11 +417,11 @@ class MarkerController {
     }
 
 
-    void updateMarkerDetailsOnServer(int id, String status) {
+    void updateMarkerDetailsOnServer(int id, String status) async {
       dynamic pinDetails = {
         "status": status
       };
-      api.updatePinStatus(pinDetails, id);
+      await api.updatePinStatus(pinDetails, id);
     }
 
 
@@ -416,7 +441,7 @@ class MarkerController {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                     Text(
-                      "Παραγωγός: ${markerData.userId}\n Τεμάχια: ${markerData.buckets}",
+                      "Παραγωγός: Τεμάχια: ${markerData.buckets}",
                       style: TextStyle(
                           fontSize: 7,
                           color: Colors.black,

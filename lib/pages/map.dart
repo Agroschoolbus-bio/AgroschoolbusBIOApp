@@ -108,6 +108,7 @@ class _MyHomePageState extends State<MapPage> {
       setState(() {});
     }, api: _api, context: context);
     markerController.fetchMarkers();
+    markerController.initMarkers();
     markerController.fetchShrederLocations();
     _startLocationTimer();
   }
@@ -169,7 +170,7 @@ class _MyHomePageState extends State<MapPage> {
 
   void _setShowOption(int opt) {
     filterPins = opt;
-    _api.setShowOption(opt);
+    _api.setShowOption(opt, '');
 
     markerController.fetchMarkers();
   }
