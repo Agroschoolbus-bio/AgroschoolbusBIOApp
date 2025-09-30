@@ -44,25 +44,6 @@ class _LoginPageState extends State<LoginPage> {
     };
     ui_ctrl.showDialogBox(obj);
   }
-    
-    // try {
-    //   UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-    //     email: "itzortzis@mail.ntua.gr",
-    //     password: "",
-    //   );
-    //   _api.addUser({
-    //     "name": "Yannis",
-    //     "lastname": "Tzortzis",
-    //     "username": "itzortzis",
-    //     "id": userCredential.user?.uid
-    //   });
-    //   print(userCredential.user?.uid);
-    //   return userCredential.user;
-    // } catch (e) {
-    //   print("Error: $e");
-    //   return null;
-    // }
-  
 
 
   Future<User?> signIn(String email, String password) async {
@@ -95,7 +76,22 @@ class _LoginPageState extends State<LoginPage> {
           MaterialPageRoute(builder: (context) => MapPage(title: 'Map Page', userId: userId)),
         );
       }
+      else {
+        dynamic obj = {
+          "title": "Αποτυχία εισόδου",
+          "message": "Τα στοιχεία εισόδου δεν ανιστοιχούν σε χρήστη 'Ελαιοπαραγωγός'.", 
+        };
+        ui_ctrl.showDialogBox(obj);
+      }
     }
+    else {
+      dynamic obj = {
+        "title": "Αποτυχία εισόδου",
+        "message": "Τα στοιχεία εισόδου δεν είναι σωστά.", 
+      };
+      ui_ctrl.showDialogBox(obj);
+    }
+    
   }
 
   @override
