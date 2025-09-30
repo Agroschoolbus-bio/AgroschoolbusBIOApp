@@ -12,7 +12,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class API {
   final BuildContext context;
-  String server = "http://147.102.160.160:8000";
+  String server = "http://147.102.160.160:8001";
   String pageText='';
   List<Marker> customMarkers = [];
   List<LatLng> selectedPoints = [];
