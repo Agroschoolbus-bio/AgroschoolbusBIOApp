@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MapPage> {
 
   void _setShowOption(int opt) {
     filterPins = opt;
-    _api.setShowOption(opt);
+    _api.setShowOption(opt, '');
 
     markerController.fetchMarkers();
     markerController.fetchShrederLocations();
@@ -403,7 +403,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "yesterday",
-              tooltip: 'Όλα τα δοχεία',
+              tooltip: 'Όλα τα τεμάχια',
               child: Icon(
                 Icons.calendar_month,
                 color: filterPins == 1 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -418,7 +418,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today",
-              tooltip: 'Σημερινά δοχεία',
+              tooltip: 'Σημερινά τεμάχια',
               child: Icon(
                 Icons.today,
                 color: filterPins == 2 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -433,7 +433,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "today1",
-              tooltip: 'Μη συλλεχθέντα, σημερινά δοχεία',
+              tooltip: 'Μη συλλεχθέντα, σημερινά τεμάχια',
               child: Icon(
                 Icons.calendar_view_week,
                 color: filterPins == 3 ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
@@ -455,29 +455,29 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "directions",
-              tooltip: 'Δημιουργία διαδρομής',
+              tooltip: 'Προσθήκη σημείου κομποστοποίησης',
               child: Icon(
                 Icons.add_location_alt_outlined,
                 color: isAddOn ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
                 ),
             ),
             const SizedBox(height: 10.0),
-            FloatingActionButton(
-              onPressed: () {
-                // Center map action
-                // _fetchDirections();
-                // _togglePositionSubscription();
-              },
-              backgroundColor: bioGreen,
-              foregroundColor: const Color.fromARGB(255, 255, 255, 255),
-              heroTag: "navigation",
-              tooltip: 'Πλοήγηση',
-              child: Icon(
-                Icons.navigation,
-                color: isGPSOn ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
-              ),
-            ),
-            const SizedBox(height: 10.0),
+            // FloatingActionButton(
+            //   onPressed: () {
+            //     // Center map action
+            //     // _fetchDirections();
+            //     // _togglePositionSubscription();
+            //   },
+            //   backgroundColor: bioGreen,
+            //   foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+            //   heroTag: "navigation",
+            //   tooltip: 'Πλοήγηση',
+            //   child: Icon(
+            //     Icons.navigation,
+            //     color: isGPSOn ? Color.fromARGB(255, 250, 148, 6): Color.fromARGB(255, 255, 255, 255),
+            //   ),
+            // ),
+            // const SizedBox(height: 10.0),
             FloatingActionButton(
               onPressed: () {
                 // Center map action

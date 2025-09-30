@@ -46,10 +46,10 @@ class API {
     return queryTomorrow;
   }
 
-  void setShowOption(int opt) {
+  void setShowOption(int opt, String userId) {
     if (opt == 1) {
       pageText = "Στον χάρτη παρουσιάζονται όλα τα δοχεία συλλογής";
-      query['user'] = '';
+      query['user'] = userId.toString();
       query['status'] = '';
       query['created_at__gte'] = '';
       query['created_at__lte'] = '';
@@ -59,7 +59,7 @@ class API {
       DateTime today = DateTime.now();
       String queryToday = getToday(today);
       String queryTomorrow = getTomorrow(today);
-      query['user'] = '';
+      query['user'] = userId.toString();
       query['status'] = '';
       query['created_at__gte'] = queryToday;
       query['created_at__lte'] = queryTomorrow;
@@ -69,7 +69,7 @@ class API {
       DateTime today = DateTime.now();
       String queryToday = getToday(today);
       String queryTomorrow = getTomorrow(today); 
-      query['user'] = '';
+      query['user'] = userId.toString();
       query['status'] = 'pending';
       query['created_at__gte'] = queryToday;
       query['created_at__lte'] = queryTomorrow;
@@ -132,33 +132,36 @@ class API {
   }
 
 
-  Future<int> updateShrederPosition(LatLng p, int shrederId) async {
-    String baseUrl = server + '/locations/ses/' + shrederId.toString() + '/update/';
+  Future<int> sendLocation(Map<String, dynamic> pinDetails) async {
+    var url = Uri.parse(server + '/locations/add-location/');
+
+    
+    Map<String, String> body = {
+      "latitude": double.parse(pinDetails['latitude'].toStringAsFixed(6)).toString(),
+      "longitude": double.parse(pinDetails['longitude'].toStringAsFixed(6)).toString(),
+      "buckets": pinDetails['buckets'],
+      "bags": pinDetails['bags'],
+      "mill": pinDetails['mill'],
+      "user": pinDetails['userId'],
+    };
 
     try {
-      final uri = Uri.parse(baseUrl);
-
-      
-      Map<String, String> body = {
-        "latitude": double.parse(p.latitude.toStringAsFixed(6)).toString(),
-        "longitude": double.parse(p.longitude.toStringAsFixed(6)).toString(),
-      };
-
-      final response = await http.patch(
-        uri,
+      var response = await http.post(
+        url,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: jsonEncode(body),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // var data = jsonDecode(response.body);
         return 0;
       } else {
-        return 1; // Got an error status code
+        return 1;
       }
-    } catch (error) {
-      return 3; // Failed to connect to the API
+    } catch (e) {
+      return 2;
     }
   }
   
@@ -189,6 +192,90 @@ class API {
     }
   }
 
+
+
+  Future<int> addUser(Map<String, dynamic> userDetails) async {
+    var url = Uri.parse(server + '/locations/add-user/');
+
+    
+    Map<String, String> body = {
+      "id": userDetails["id"],
+      "name": userDetails['name'],
+      "lastname": userDetails['lastname'],
+      "username": userDetails['username']
+    };
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // var data = jsonDecode(response.body);
+        return 0;
+      } else {
+        return 1;
+      }
+    } catch (e) {
+      return 2;
+    }
+  }
+
+
+  Future<Map<String, dynamic>> fetchUserDetails(userId) async {
+    String baseUrl = server + '/locations/users/' + userId + '/';
+    print(baseUrl);
+
+    try {
+      final uri = Uri.parse(baseUrl);
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        return data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (error) {
+      throw Exception('Failed to connect to the API: $error');
+    }
+  }
+
+
+  Future<int> updateShrederPosition(LatLng p, int shrederId) async {
+    String baseUrl = server + '/locations/ses/' + shrederId.toString() + '/update/';
+
+    try {
+      final uri = Uri.parse(baseUrl);
+
+      
+      Map<String, String> body = {
+        "latitude": double.parse(p.latitude.toStringAsFixed(6)).toString(),
+        "longitude": double.parse(p.longitude.toStringAsFixed(6)).toString(),
+      };
+
+      final response = await http.patch(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        return 0;
+      } else {
+        return 1; // Got an error status code
+      }
+    } catch (error) {
+      return 3; // Failed to connect to the API
+    }
+  }
 
   Future<List<dynamic>> fetchShrederPoints() async {
     String baseUrl = server + '/locations/ses/';
