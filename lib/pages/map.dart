@@ -837,7 +837,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "points",
-              tooltip: 'Αυτόματη επιλογή σημείων',
+              tooltip: 'Τροποποίηση χωρητικότητας φορτηγού',
               child: const Icon(
                 Icons.display_settings_outlined,
                 color: Color.fromARGB(255, 255, 255, 255),
@@ -852,7 +852,7 @@ class _MyHomePageState extends State<MapPage> {
               backgroundColor: bioGreen,
               foregroundColor: const Color.fromARGB(255, 255, 255, 255),
               heroTag: "points",
-              tooltip: 'Αυτόματη επιλογή σημείων',
+              tooltip: 'Επιλογή αλγορίθμου',
               child: const Icon(
                 Icons.tips_and_updates,
                 color: Color.fromARGB(255, 255, 255, 255),
