@@ -1,6 +1,6 @@
 {
-    "name": "agroschoolbus",
-    "short_name": "agroschoolbus",
+    "name": "agroschoolbusbioproducer",
+    "short_name": "agroschoolbusbioproducer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",

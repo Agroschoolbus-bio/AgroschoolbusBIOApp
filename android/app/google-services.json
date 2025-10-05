@@ -7,9 +7,28 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:735729400105:android:00fbadb8aa3fa802ad9f38",
+        "mobilesdk_app_id": "1:735729400105:android:0fd132c8a75fa576ad9f38",
         "android_client_info": {
-          "package_name": "com.example.agroschoolbus"
+          "package_name": "com.analogue.agroschoolbusbioproducer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH_anbznmFJ9HBEb15ubkkQ5mPLDGdmIg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735729400105:android:2278479422550c09ad9f38",
+        "android_client_info": {
+          "package_name": "com.analogue.agroschoolbusbiotransporter"
         }
       },
       "oauth_client": [],
