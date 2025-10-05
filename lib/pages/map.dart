@@ -55,6 +55,7 @@ class _MyHomePageState extends State<MapPage> {
   bool creatingNewPathOn = false;
 
   List<LatLng> newPath = [];
+  LatLng mapCenter = LatLng(37.4835, 21.6479);
   
   // Timer? _timer;
   late API _api;
@@ -110,7 +111,18 @@ class _MyHomePageState extends State<MapPage> {
     markerController.fetchMarkers();
     markerController.initMarkers();
     markerController.fetchShrederLocations();
+    _setMapCenter();
     _startLocationTimer();
+  }
+
+
+  Future<void> _setMapCenter() async {
+    Map<String, dynamic> data = await _api.fetchAreaInfo();
+    LatLng center = LatLng(double.parse(data['center_lat']), double.parse(data['center_lon']));
+    setState(() {
+      mapCenter = center;
+    });
+    mapController.move(center, 12.0); // update map
   }
 
   bool _dialogShown = false;
@@ -877,7 +889,7 @@ class _MyHomePageState extends State<MapPage> {
             FloatingActionButton(
               onPressed: () async {
                 // Center map action
-                markerController.chooseMarkersToCollect();
+                await markerController.chooseMarkersToCollect();
                 _fetchRoute();
               },
               backgroundColor: bioGreen,
