@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MapPage> {
 
   Position? _position;
   LatLng? apiPosition;
+  LatLng mapCenter = LatLng(37.4835, 21.6479);
   
   final GPS _gps = GPS();
 
@@ -100,7 +101,18 @@ class _MyHomePageState extends State<MapPage> {
     }, api: _api, context: context);
     _api.setShowOption(1, widget.userId);
     markerController.fetchMarkers();
+    _setMapCenter();
     _startRefreshTimer();
+  }
+
+
+  Future<void> _setMapCenter() async {
+    Map<String, dynamic> data = await _api.fetchAreaInfo();
+    LatLng center = LatLng(double.parse(data['center_lat']), double.parse(data['center_lon']));
+    setState(() {
+      mapCenter = center;
+    });
+    mapController.move(mapCenter, 12.0); // update map
   }
 
   
@@ -128,7 +140,7 @@ class _MyHomePageState extends State<MapPage> {
 
   void _changeTiles() {
     setState(() {
-      if (tileIndex == 2) {
+      if (tileIndex == 1) {
         tileIndex = 0;
       } else {
         tileIndex ++;
@@ -369,7 +381,7 @@ class _MyHomePageState extends State<MapPage> {
               onPressed: () {
                 // Center map action
                 mapController.move(
-                  const LatLng(37.4835, 21.6479),
+                  mapCenter,
                   12.0,
                 );
               },
