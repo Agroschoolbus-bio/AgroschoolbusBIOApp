@@ -135,7 +135,7 @@ class MarkerController {
         await pointSelectionAlgorithm_1();
       }
       else if (pointSelectionAlgorithm == 2) {
-        pointSelectionAlgorithm_2();
+        await pointSelectionAlgorithm_2();
       } else {
         pointSelectionAlgorithm_1();
       }
@@ -233,14 +233,14 @@ class MarkerController {
       return minPoint;
     }
 
-    void pointSelectionAlgorithm_2() async {
+    Future<void> pointSelectionAlgorithm_2() async {
       Position? instantPosition;
       instantPosition = await determinePosition();
 
       selectedPoints = [];
       pendingMarkers = [];
       selectedPoints.add(LatLng(instantPosition.latitude, instantPosition.longitude));
-      LatLng _closestToTransporterShreder = findclosestShrederToTransporter(instantPosition);
+      LatLng _closestToTransporterShreder = findclosestShrederToTransporter(LatLng(instantPosition.latitude, instantPosition.longitude));
       // selectedPoints.add(factoryLocation);
       // print(selectedPoints);
       LatLng p;
