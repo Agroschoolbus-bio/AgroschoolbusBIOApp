@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:agroschoolbus/pages/map.dart';
-import 'package:agroschoolbus/pages/login.dart';
+import 'package:agroschoolbusbio/pages/map.dart';
+import 'package:agroschoolbusbio/pages/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
