@@ -82,7 +82,7 @@ class OsrmApi {
   
 
   Future<List<List<double>>> fetchDirections() async {
-    const osrm = 'http://147.102.160.160:5000/trip/v1/driving/';
+    const osrm = 'https://pressoil.agroschoolbus.eu/osrm/route/v1/driving/';
 
     
     String points = addPointsToString();
@@ -93,8 +93,6 @@ class OsrmApi {
         queryParameters: {
           'overview': "full",
           'geometries': "polyline",
-          // 'steps': "true",
-          'roundtrip': "true"
         },
       );
       // print(uri);
@@ -117,7 +115,7 @@ class OsrmApi {
   }
 
   Future<List<List<double>>> fetchTransporterRoute() async {
-    String url = 'http://147.102.160.160:8000/route/1';
+    String url = 'https://kladiaelias.agroschoolbusbio.eu/api/route/1/';
 
     try {
       final uri = Uri.parse(url);
@@ -141,7 +139,7 @@ class OsrmApi {
   }
 
   void fetchTransporterPosition() async {
-    String url = 'http://147.102.160.160:8000/route/1';
+    String url = 'https://kladiaelias.agroschoolbusbio.eu/api/route/1/';
 
     try {
       final uri = Uri.parse(url);

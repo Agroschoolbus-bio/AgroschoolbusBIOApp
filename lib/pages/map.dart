@@ -1,5 +1,5 @@
 
-import 'package:agroschoolbus/services/osrm_api.dart';
+import 'package:agroschoolbusbio/services/osrm_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -10,8 +10,8 @@ import '../services/api.dart';
 import '../services/gps.dart';
 
 import '../utils/marker_data.dart';
-import 'package:agroschoolbus/utils/ui_controller.dart';
-import 'package:agroschoolbus/utils/marker_controller.dart';
+import 'package:agroschoolbusbio/utils/ui_controller.dart';
+import 'package:agroschoolbusbio/utils/marker_controller.dart';
 
 // 729D37
 
@@ -41,6 +41,8 @@ class _MyHomePageState extends State<MapPage> {
   Timer? _markersRefreshTimer;
   Timer? _routeRefreshTimer;
   Timer? _transporterPositionRefreshTimer;
+
+  LatLng mapCenter = LatLng(37.4835, 21.6479);
 
 
   Color bioGreen = Color.fromARGB(255, 154, 196, 58);
@@ -97,9 +99,20 @@ class _MyHomePageState extends State<MapPage> {
     }, api: _api, context: context);
     markerController.fetchMarkers();
     markerController.fetchShrederLocations();
+    _setMapCenter();
     _startMarkersTimer();
     _startRouteTimer();
     _startTransporterPositionRefreshTimer();
+  }
+
+
+  Future<void> _setMapCenter() async {
+    Map<String, dynamic> data = await _api.fetchAreaInfo();
+    LatLng center = LatLng(double.parse(data['center_lat']), double.parse(data['center_lon']));
+    setState(() {
+      mapCenter = center;
+    });
+    mapController.move(center, 12.0); // update map
   }
 
   void _startMarkersTimer() {
@@ -166,7 +179,7 @@ class _MyHomePageState extends State<MapPage> {
 
   void _changeTiles() {
     setState(() {
-      if (tileIndex == 2) {
+      if (tileIndex == 1) {
         tileIndex = 0;
       } else {
         tileIndex ++;

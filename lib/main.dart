@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:agroschoolbus/pages/map.dart';
-import 'package:agroschoolbus/pages/login.dart';
+import 'package:agroschoolbusbio/pages/map.dart';
+import 'package:agroschoolbusbio/pages/login.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'package:agroschoolbusbio/firebase_options.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    print('Firebase initialization error: $e');
+  }
   runApp(const MyApp());
 }
 
@@ -16,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AgroSchoolBus',
+      title: 'AgroschoolbusBIO',
       theme: ThemeData(
         // This is the theme of your application.
         //

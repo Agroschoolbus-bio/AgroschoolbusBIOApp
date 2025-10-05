@@ -12,7 +12,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class API {
   final BuildContext context;
-  String server = "http://147.102.160.160:8001";
+  String server = "https://kladiaelias.agroschoolbusbio.eu/api";
   String pageText='';
   List<Marker> customMarkers = [];
   List<LatLng> selectedPoints = [];
@@ -79,7 +79,7 @@ class API {
 
 
   Future<int> sendRouteDetails(Map<String, dynamic> routeDetails) async {
-    String baseUrl = server + '/route/1/';
+    String baseUrl = '$server/route/1/';
 
     try {
       final uri = Uri.parse(baseUrl);
@@ -106,7 +106,7 @@ class API {
 
 
   Future<int> updatePinStatus(Map<String, dynamic> pinDetails, int pinId) async {
-    String baseUrl = server + '/locations/locations/' + pinId.toString() + '/update/';
+    String baseUrl = '$server/locations/locations/$pinId/update/';
 
     try {
       final uri = Uri.parse(baseUrl);
@@ -133,7 +133,7 @@ class API {
 
 
   Future<int> sendLocation(Map<String, dynamic> pinDetails) async {
-    var url = Uri.parse(server + '/locations/add-location/');
+    var url = Uri.parse('$server/locations/add-location/');
 
     
     Map<String, String> body = {
@@ -167,7 +167,7 @@ class API {
   
 
   Future<List<dynamic>> fetchLatLngPoints() async {
-    String baseUrl = server + '/locations/locations/';
+    String baseUrl = '$server/locations/locations/';
 
     try {
       final uri = Uri.parse(baseUrl).replace(
@@ -195,7 +195,7 @@ class API {
 
 
   Future<int> addUser(Map<String, dynamic> userDetails) async {
-    var url = Uri.parse(server + '/locations/add-user/');
+    var url = Uri.parse('$server/locations/add-user/');
 
     
     Map<String, String> body = {
@@ -227,8 +227,7 @@ class API {
 
 
   Future<Map<String, dynamic>> fetchUserDetails(userId) async {
-    String baseUrl = server + '/locations/users/' + userId + '/';
-    print(baseUrl);
+    String baseUrl = '$server/locations/users/$userId/';
 
     try {
       final uri = Uri.parse(baseUrl);
@@ -247,8 +246,31 @@ class API {
   }
 
 
+  Future<Map<String, dynamic>> fetchAreaInfo() async {
+    String url = '$server/route/1/';
+
+    try {
+      final uri = Uri.parse(url);
+      final response = await http.get(uri);
+      
+
+      
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        
+        return data;
+      } else {
+        throw Exception('Failed to load data');
+      }
+      
+    } catch (error) {
+      throw Exception('Failed to connect to the API: $error');
+    }
+  }
+
+
   Future<int> updateShrederPosition(LatLng p, int shrederId) async {
-    String baseUrl = server + '/locations/ses/' + shrederId.toString() + '/update/';
+    String baseUrl = '$server/locations/ses/$shrederId/update/';
 
     try {
       final uri = Uri.parse(baseUrl);
@@ -278,7 +300,7 @@ class API {
   }
 
   Future<List<dynamic>> fetchShrederPoints() async {
-    String baseUrl = server + '/locations/ses/';
+    String baseUrl = '$server/locations/ses/';
 
     try {
       final uri = Uri.parse(baseUrl);

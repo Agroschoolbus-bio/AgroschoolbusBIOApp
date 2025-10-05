@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:agroschoolbus/pages/map.dart';
+import 'package:agroschoolbusbio/pages/map.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../firebase_options.dart';
 
 import 'package:flutter/gestures.dart';
 import '../services/api.dart';
-import 'package:agroschoolbus/utils/ui_controller.dart';
+import 'package:agroschoolbusbio/utils/ui_controller.dart';
 
 
 
@@ -246,8 +246,19 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-
-
+              const SizedBox(height: 200.0),
+              Center(
+                child: SizedBox(
+                  width: 400,
+                  child: Image.asset('assets/icons/footer.png'),
+                ),
+              ),
+              // Image.asset(
+              //     'assets/icons/footer.png',
+              //     // height: 150,
+              //     width: 100,
+              //     fit: BoxFit.fitWidth,
+              //   ),
               ],
             ),
           ),

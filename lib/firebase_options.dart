@@ -42,12 +42,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyBqotEjqPHzukyeot7omTmGNiqYTR7YYfI',
-    appId: '1:735729400105:web:8e2f461a32228cf2ad9f38',
+    appId: '1:735729400105:web:8eca53d4b6019694ad9f38',
     messagingSenderId: '735729400105',
     projectId: 'agroschoolbusbio',
     authDomain: 'agroschoolbusbio.firebaseapp.com',
     storageBucket: 'agroschoolbusbio.firebasestorage.app',
-    measurementId: 'G-5WDQSG5LCX',
+    measurementId: 'G-KDDVE4SHDN',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
