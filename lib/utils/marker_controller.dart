@@ -130,11 +130,11 @@ class MarkerController {
 
     }
 
-    void chooseMarkersToCollect() {
+    Future<void> chooseMarkersToCollect() async {
       if (pointSelectionAlgorithm == 1) {
-        pointSelectionAlgorithm_1();
+        await pointSelectionAlgorithm_1();
       }
-      else if (pointSelectionAlgorithm == 1) {
+      else if (pointSelectionAlgorithm == 2) {
         pointSelectionAlgorithm_2();
       } else {
         pointSelectionAlgorithm_1();
@@ -143,7 +143,7 @@ class MarkerController {
     }
 
 
-    void pointSelectionAlgorithm_1() async {
+    Future<void> pointSelectionAlgorithm_1() async {
       Position? instantPosition;
       instantPosition = await determinePosition();
       // print(instantPosition);
@@ -211,6 +211,7 @@ class MarkerController {
       // print(shrederId);
       selectedPoints.add(shredersDataList[shrederId]!.point);
 
+      // print("Marker controller selected points");
       // print(selectedPoints);
 
       onMarkersUpdated();
@@ -376,10 +377,8 @@ class MarkerController {
 
 
     void initMarkers() async {
-      print("xaxaxaxaxa");
-      print(customMarkers.length);
+      
       for (int i = 0; i < customMarkers.length; i++) {
-          print(markersDataList[customMarkers[i].point]);
           if (markersDataList[customMarkers[i].point]!.state == MarkerState.selected) {
             updateMarkerDetailsOnServer(markersDataList[customMarkers[i].point]!.id, "pending");
             markersDataList[customMarkers[i].point]!.state = MarkerState.pending;

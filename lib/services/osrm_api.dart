@@ -81,7 +81,7 @@ class OsrmApi {
     
     String points = addPointsToString();
     String url = osrm + points;
-
+    
     try {
       final uri = Uri.parse(url).replace(
         queryParameters: {

@@ -877,7 +877,7 @@ class _MyHomePageState extends State<MapPage> {
             FloatingActionButton(
               onPressed: () async {
                 // Center map action
-                markerController.chooseMarkersToCollect();
+                await markerController.chooseMarkersToCollect();
                 _fetchRoute();
               },
               backgroundColor: bioGreen,
