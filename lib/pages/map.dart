@@ -140,7 +140,7 @@ class _MyHomePageState extends State<MapPage> {
 
   void _changeTiles() {
     setState(() {
-      if (tileIndex == 2) {
+      if (tileIndex == 1) {
         tileIndex = 0;
       } else {
         tileIndex ++;
@@ -381,7 +381,7 @@ class _MyHomePageState extends State<MapPage> {
               onPressed: () {
                 // Center map action
                 mapController.move(
-                  const LatLng(37.4835, 21.6479),
+                  mapCenter,
                   12.0,
                 );
               },
