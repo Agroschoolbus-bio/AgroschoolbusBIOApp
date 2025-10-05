@@ -1,5 +1,5 @@
 
-import 'package:agroschoolbus/services/osrm_api.dart';
+import 'package:agroschoolbusbio/services/osrm_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -10,8 +10,8 @@ import '../services/api.dart';
 import '../services/gps.dart';
 
 import '../utils/marker_data.dart';
-import 'package:agroschoolbus/utils/ui_controller.dart';
-import 'package:agroschoolbus/utils/marker_controller.dart';
+import 'package:agroschoolbusbio/utils/ui_controller.dart';
+import 'package:agroschoolbusbio/utils/marker_controller.dart';
 
 import 'dart:math';
 // 729D37
@@ -282,7 +282,7 @@ class _MyHomePageState extends State<MapPage> {
 
   void _changeTiles() {
     setState(() {
-      if (tileIndex == 2) {
+      if (tileIndex == 1) {
         tileIndex = 0;
       } else {
         tileIndex ++;
@@ -552,7 +552,7 @@ class _MyHomePageState extends State<MapPage> {
 
 
   void centerMap() {
-    mapController.move(const LatLng(37.4835, 21.6479), 12.0);
+    mapController.move(mapCenter, 12.0);
     mapZoomedForNavigation = false;
   }
   
