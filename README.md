@@ -18,7 +18,7 @@ https://www.agroschoolbusbio.gr/
  - Προσθήκη νέου ROI αυτόματα μέσω GPS
  - Επισκόπηση της τρέχουσας κατάστασης των ROIs
 
-Πηγή: https://github.com/Agroschoolbus-bio/application/tree/producer_v1
+Πηγαίος κώδικας: https://github.com/Agroschoolbus-bio/application/tree/producer_v1
 
 ### Εφαρμογή Μεταφορέα
 
@@ -29,7 +29,7 @@ https://www.agroschoolbusbio.gr/
  - Ενεργοποίηση πλοήγησης βάσει της δημιουργηθείσας διαδρομής
  - Ενημέρωση της τρέχουσας κατάστασης των ROIs
 
-Πηγή: https://github.com/Agroschoolbus-bio/application/tree/transporter_v1
+Πηγαίος κώδικας: https://github.com/Agroschoolbus-bio/application/tree/transporter_v1
 
 ### Εφαρμογή Χειριστή Κομποστοποίησης
 
@@ -39,7 +39,7 @@ https://www.agroschoolbusbio.gr/
  - Εποπτεία της τρέχουσας θέσης του μεταφορέα
  - Επισκόπηση της τρέχουσας κατάστασης των ROIs
 
-Πηγή: https://github.com/Agroschoolbus-bio/application/tree/compost_op_v1
+Πηγαίος κώδικας: https://github.com/Agroschoolbus-bio/application/tree/compost_op_v1
 
 
 ## Οδηγίες πρόσβασης
