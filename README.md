@@ -58,3 +58,6 @@ Source:
 | Django | Database - API | https://www.djangoproject.com/ |
 | OSRM | Routing engine | https://project-osrm.org/ |
 
+#### With funding support from <img width="650" height="507" alt="funding_logoa" src="pub-eu_image.webp"/>
+
+
